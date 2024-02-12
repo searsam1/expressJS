@@ -1,7 +1,3 @@
-// Complete the timeMiddleware function to DRY the current application
-// by attaching the currentTime to the request body as date.
-// Use this in all routes and eliminate the duplicate code.
-
 const express = require('express');
 const app = express();
 
@@ -12,19 +8,21 @@ const database = {
 };
 
 // Add your code here:
-const timeMiddleware = (food) => {
-  const currentTime = Date.now();
-  res.send(`${food} as of ${currentTime}: ${database.snacks}`);
+const timeMiddleware = (req, res, next) => {  
+  req.date = Date.now();
+  next();
 };
 
+app.use(timeMiddleware);
+
 app.get('/snacks', (req, res, next) => {
-  timeMiddleware('snacks')
+  res.send(`Snacks as of ${req.date}: ${database.snacks}`);
 });
 
 app.get('/sides', (req, res, next) => {
-  timeMiddleware('sides')
+  res.send(`Sides as of ${req.date}: ${database.sides}`);
 });
 
 app.get('/appetizers', (req, res, next) => {
-  timeMiddleware('appetizers')
+  res.send(`Appetizers as of ${req.date}: ${database.appetizers}`);
 });
